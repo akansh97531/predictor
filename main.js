@@ -1,5 +1,9 @@
 const electron = require('electron')
+var zmq = require("zmq");  
+var socket = zmq.socket("rep");
+
 // Module to control application life.
+const globalShortcut = electron.globalShortcut;
 const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
@@ -7,13 +11,16 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
+// make `process.stdin` begin emitting "keypress" events 
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow = new BrowserWindow({width: 1000, height: 480, x:200, y:600 ,frame:true,
+                   resizable:true ,alwaysOnTop:true })
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -22,8 +29,11 @@ function createWindow () {
     slashes: true
   }))
 
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.showInactive();
+
+  mainWindow.hide();
+
+
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -38,6 +48,39 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow)
+
+
+socket.on("message", function (message) { 
+
+      mainWindow.webContents.send("data_from_py",message.toString("utf8"));
+
+      console.log(message.toString("utf8"));
+      mainWindow.show();
+      // reply(null, "selected, " + "message");
+      globalShortcut.register('Left', () => {
+        mainWindow.webContents.send('key' , "Left");
+      });
+
+      globalShortcut.register('Right', () => {
+        mainWindow.webContents.send('key' , "Right");
+      });
+
+      globalShortcut.register('Enter', () => {
+        mainWindow.webContents.send('key' , "Enter");
+      });
+
+      electron.ipcMain.on('data_selected' , (event, message) => {
+        // console.log(message);
+        socket.send(message);
+        mainWindow.hide();
+        globalShortcut.unregisterAll()
+      });
+
+    
+});
+
+
+socket.connect('tcp://127.0.0.1:5680');
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

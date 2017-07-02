@@ -3,13 +3,101 @@
   <head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel=stylesheet type="text/css" href="layout.css">
+    <script type="text/javascript" src="script.js"></script>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+
+
+  <div class="button">
+    
+    <div>
+      <div class="scrollmenu">
+         <a >Home1</a>
+        <a >News1</a>
+        <a >Contact1</a>
+        <a >About</a>
+        <a >Support</a>
+        <a >Blog</a>
+        <a >Tools</a>  
+        <a >Base</a>
+        <a >Custom</a>
+        <a >More</a>
+        <a >Logo</a>
+        <a >Friends</a>
+        <a >Partners</a>
+        <a >People</a>
+        <a >Work</a> 
+      </div>
+
+      <div>
+        <input type="button" name="submit" value="search" class="btn">
+      </div>
+      
+    </div>
+
+
+
+    <div class="search_box">
+    
+    <input type="button" name="cancel" value="cancel" class="cancel">
+
+    <script>
+      (function() {
+        var cx = '014348573356739214681:fym-9bw943s';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+    </script>
+    <gcse:searchbox-only></gcse:searchbox-only>
+
+
+    </div>
+
+    <div>
+    <gcse:searchresults-only></gcse:searchresults-only>
+    </div>
+
+
+  </div>
+
+
+<!--     <a >    </a>    
+    <a >    </a> 
+    <a >    </a>   
+    <a >    </a>
+    <a >    </a> -->
+<!--   </div>
+
+    <div class="tab">
+      <button class="tablinks" onclick="openCity(event, 'London')">London</button>
+      <button class="tablinks" onclick="openCity(event, 'Paris')">Paris</button>
+      <button class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</button>
+    </div>
+
+    <div id="London" class="tabcontent">
+      <h3>London</h3>
+      <p>London is the capital city of England.</p>
+    </div>
+
+    <div id="Paris" class="tabcontent">
+      <h3>Paris</h3>
+      <p>Paris is the capital of France.</p> 
+    </div>
+
+    <div id="Tokyo" class="tabcontent">
+      <h3>Tokyo</h3>
+      <p>Tokyo is the capital of Japan.</p>
+    </div>
+ -->
+
+
   </body>
 
   <script>
