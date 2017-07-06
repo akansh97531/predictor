@@ -3,7 +3,7 @@
 div.scrollmenu {
 
     background-color: white;
-    width:400px;
+    width:700px;
     overflow-x: scroll;
     white-space: nowrap;
 }

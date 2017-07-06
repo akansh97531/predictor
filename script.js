@@ -10,6 +10,7 @@ $(document).ready(function(){
 
 
     electron.ipcRenderer.on('data_from_py',(event,list)=> {
+        
         console.log(list)
 
         $(".scrollmenu" ).empty()

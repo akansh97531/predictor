@@ -1,8 +1,7 @@
 const electron = require('electron')
 var zmq = require("zmq");  
-var socket = zmq.socket("rep");
-
-// Module to control application life.
+var socket = zmq.socket("pair");
+var spawn = require("child_process").spawn;
 const globalShortcut = electron.globalShortcut;
 const app = electron.app
 // Module to create native browser window.
@@ -11,15 +10,24 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
-// make `process.stdin` begin emitting "keypress" events 
+// var child = spawn('python3',['script.py'],{detached: true});
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+// child.stdout.on('data', (data) => {
+//   console.log(`stdout: ${data}`);
+// });
+// a
+// child.stderr.on('data', (data) => {
+//   console.log(`stderr: ${data}`);
+// });
+
+let socket1 = socket.connect('tcp://127.0.0.1:5681');
+// let socket2 = socket.connect('tcp://127.0.0.1:5682');
+
 let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1000, height: 480, x:200, y:600 ,frame:true,
+  mainWindow = new BrowserWindow({width: 1000, height: 80, x:200, y:700 ,frame:true,
                    resizable:true ,alwaysOnTop:true })
 
   // and load the index.html of the app.
@@ -33,29 +41,28 @@ function createWindow () {
 
   mainWindow.hide();
 
-
-
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
     mainWindow = null
   })
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.on('ready', createWindow)
 
+socket1.on("message", function (message) { 
+      console.log("mess received")
 
-socket.on("message", function (message) { 
+      var parse = JSON.parse(message.toString("utf8"));
+      var parsed = [];
 
-      mainWindow.webContents.send("data_from_py",message.toString("utf8"));
+      for(var x in parse){
+       parsed.push(parse[x]);
+      }
 
-      console.log(message.toString("utf8"));
-      mainWindow.show();
+      mainWindow.webContents.send("data_from_py",parsed);
+
+      // show window but doenot focus
+      mainWindow.showInactive();
       // reply(null, "selected, " + "message");
       globalShortcut.register('Left', () => {
         mainWindow.webContents.send('key' , "Left");
@@ -69,35 +76,21 @@ socket.on("message", function (message) {
         mainWindow.webContents.send('key' , "Enter");
       });
 
-      electron.ipcMain.on('data_selected' , (event, message) => {
-        // console.log(message);
-        socket.send(message);
-        mainWindow.hide();
-        globalShortcut.unregisterAll()
-      });
-
-    
 });
 
+electron.ipcMain.on('data_selected' , (event, message) => {
+  console.log("here");
+  socket1.send(message);
+  mainWindow.hide();
+  globalShortcut.unregisterAll()
+});
 
-socket.connect('tcp://127.0.0.1:5680');
-
-// Quit when all windows are closed.
-app.on('window-all-closed', function () {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
-
-app.on('activate', function () {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
-  }
-})
-
+process.on('SIGINT', function() {
+  socket1.send("quit")
+  socket1.close();
+  child.kill();
+  // socket2.close();
+  process.exit();
+});
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
