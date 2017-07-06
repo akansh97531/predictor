@@ -24,4 +24,12 @@ npm start
 run: npm start    in one terminal 
 
 press cntrl+space and then ctrl+c to abort
+else socket will not close and you will have to close manually
+using 
+
+sudo netstat -lnp
+sudo kill -9 pid
+
+pid is id u get from netstat command
+
 ```
