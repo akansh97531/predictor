@@ -91,7 +91,10 @@ electron.ipcMain.on('data_selected' , (event, message) => {
   console.log("here");
   socket1.send(message);
   mainWindow.hide();
-  globalShortcut.unregisterAll()
+  globalShortcut.unregister('Left');
+  globalShortcut.unregister('Right');
+  globalShortcut.unregister('Enter');
+
 });
 
 
