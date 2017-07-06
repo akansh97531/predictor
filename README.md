@@ -20,8 +20,8 @@ npm install electron --save -dev
 
 ```
 npm start
-```
-run: npm start    in one terminal 
-and run: sudo python script.py   in other (autocomplete loads data for the first time only can take time)
 
-press cntrl+c in both terminals to abort
+run: npm start    in one terminal 
+
+press cntrl+space and then ctrl+c to abort
+```

@@ -10,15 +10,15 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
-// var child = spawn('python3',['script.py'],{detached: true});
+var child = spawn('python3',['script.py'],{detached: true});
 
-// child.stdout.on('data', (data) => {
-//   console.log(`stdout: ${data}`);
-// });
-// a
-// child.stderr.on('data', (data) => {
-//   console.log(`stderr: ${data}`);
-// });
+child.stdout.on('data', (data) => {
+  console.log(`stdout: ${data}`);
+});
+
+child.stderr.on('data', (data) => {
+  console.log(`stderr: ${data}`);
+});
 
 let socket1 = socket.connect('tcp://127.0.0.1:5681');
 // let socket2 = socket.connect('tcp://127.0.0.1:5682');
@@ -45,6 +45,15 @@ function createWindow () {
   mainWindow.on('closed', function () {
     mainWindow = null
   })
+
+
+  globalShortcut.register('CommandOrControl+Space', () => {
+    socket1.close();
+    child.kill();
+    // socket2.close();
+    process.exit();
+  })
+
 }
 
 app.on('ready', createWindow)
@@ -85,8 +94,8 @@ electron.ipcMain.on('data_selected' , (event, message) => {
   globalShortcut.unregisterAll()
 });
 
+
 process.on('SIGINT', function() {
-  socket1.send("quit")
   socket1.close();
   child.kill();
   // socket2.close();

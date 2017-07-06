@@ -64,12 +64,13 @@ def kbevent(event):
         print("")
     else :
         s=""
-    prev_key = event.Key
 
-def signal_handler(signal, frame):
-    print('You pressed Ctrl+C!')
-    sock1.close()
-    sys.exit(0)
+    if prev_key=="Control_L" and event.Key=="space":
+        sock1.close()
+        context.destroy()
+        sys.exit(0)
+
+    prev_key = event.Key
 
 def main():
     global sock1
@@ -84,8 +85,6 @@ def main():
 
     thread1 = mythread()
     thread1.start()
-
-    signal.signal(signal.SIGINT, signal_handler)
 
     
 if __name__ == '__main__':
