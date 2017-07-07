@@ -84,12 +84,29 @@ def predict_currword(word, top_n=10):
         raise Exception("Please load predictive models. Run:\
                         \n\tautocomplete.load()")
 
+def predict_currword_user(word, top_n=10):
+    """given a word, return top n suggestions based off frequency of words
+    prefixed by said input word"""
+    try:
+        return [(k, v) for k, v in models.USER_WORDS_MODEL.most_common()
+                if k.startswith(word)][:top_n]
+    except KeyError:
+        raise Exception("Please load predictive models. Run:\
+                        \n\tautocomplete.load()")
+
 
 def predict_currword_given_lastword(first_word, second_word, top_n=10):
     """given a word, return top n suggestions determined by the frequency of
     words prefixed by the input GIVEN the occurence of the last word"""
     return Counter({w:c for w, c in
                     models.WORD_TUPLES_MODEL[first_word.lower()].items()
+                    if w.startswith(second_word.lower())}).most_common(top_n)
+
+def predict_currword_given_lastword_user(first_word, second_word, top_n=10):
+    """given a word, return top n suggestions determined by the frequency of
+    words prefixed by the input GIVEN the occurence of the last word"""
+    return Counter({w:c for w, c in
+                    models.USER_WORD_TUPLES_MODEL[first_word.lower()].items()
                     if w.startswith(second_word.lower())}).most_common(top_n)
 
 

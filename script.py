@@ -12,6 +12,8 @@ import auto
 
 auto.load()
 
+auto.models.load_models("user_model.pkl")
+
 lis=[  "Home","News","Contact","About",
         "Support","Blog","Tools","Base",
         "Custom","More","Logo","Friends",
@@ -22,11 +24,11 @@ s=""
 
 context = zmq.Context()
 sock1 = context.socket(zmq.PAIR)
-sock1.bind("tcp://127.0.0.1:5681")
+sock1.bind("tcp://127.0.0.1:5682")
 
 class mythread(threading.Thread):
 
-    def __init__(self): 
+    def __init__(self):
         threading.Thread.__init__(self)
         # self.sock2 = context.socket(zmq.PAIR)
         # self.sock2.bind("tcp://127.0.0.1:5682")
@@ -56,16 +58,32 @@ def kbevent(event):
         print (s)
         # for testing sending sample list :lis
         lis=[]
-        for i in auto.predict(s,''):
+
+        for i in auto.predict_currword_user(s):
             lis.append(i[0])
+
+        temp=auto.predict_currword(s,25)
+        for j in temp:
+            if len(lis)>=10:
+                break
+            if j[0] not in lis:
+                lis.append(j[0])
+
+
         sock1.send_string(json.dumps(lis))
 
-    elif event.Key == 'Left' or event.Key == 'Return' or event.Key == 'Right':
+    elif event.Key == 'Left' or event.Key == 'Right':
         print("")
+    elif event.Key == 'Return' or event.Key == 'space':
+        auto.models.train_models_user(s+" this","user_model.pkl")
+        auto.models.save_models_user()
+        s=""
     else :
         s=""
 
+    # safely exit 
     if prev_key=="Control_L" and event.Key=="space":
+        
         sock1.close()
         context.destroy()
         sys.exit(0)
@@ -86,6 +104,6 @@ def main():
     thread1 = mythread()
     thread1.start()
 
-    
+
 if __name__ == '__main__':
     main()

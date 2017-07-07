@@ -20,7 +20,7 @@ child.stderr.on('data', (data) => {
   console.log(`stderr: ${data}`);
 });
 
-let socket1 = socket.connect('tcp://127.0.0.1:5681');
+let socket1 = socket.connect('tcp://127.0.0.1:5682');
 // let socket2 = socket.connect('tcp://127.0.0.1:5682');
 
 let mainWindow
