@@ -20,7 +20,7 @@ child.stderr.on('data', (data) => {
   console.log(`stderr: ${data}`);
 });
 
-let socket1 = socket.connect('tcp://127.0.0.1:5682');
+let socket1 = socket.connect('tcp://127.0.0.1:5683');
 // let socket2 = socket.connect('tcp://127.0.0.1:5682');
 
 let mainWindow
@@ -59,9 +59,19 @@ function createWindow () {
 app.on('ready', createWindow)
 
 socket1.on("message", function (message) { 
-      console.log("mess received")
+
+      console.log("here")
 
       var parse = JSON.parse(message.toString("utf8"));
+
+      if (parse == "$hide" ){
+        mainWindow.hide();
+        globalShortcut.unregister('Left');
+        globalShortcut.unregister('Right');
+        globalShortcut.unregister('Enter');
+        return ;
+      }
+
       var parsed = [];
 
       for(var x in parse){

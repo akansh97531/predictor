@@ -24,7 +24,7 @@ s=""
 
 context = zmq.Context()
 sock1 = context.socket(zmq.PAIR)
-sock1.bind("tcp://127.0.0.1:5682")
+sock1.bind("tcp://127.0.0.1:5683")
 
 class mythread(threading.Thread):
 
@@ -40,6 +40,7 @@ class mythread(threading.Thread):
             # pyautogui.typewrite(messg.decode("utf-8") )
             for i in range(len(s)+1):
                 pyautogui.press('backspace')
+
             s=""
             xerox.copy(messg.decode("utf-8"))
             pyautogui.hotkey('ctrl', 'v')
@@ -69,7 +70,6 @@ def kbevent(event):
             if j[0] not in lis:
                 lis.append(j[0])
 
-
         sock1.send_string(json.dumps(lis))
 
     elif event.Key == 'Left' or event.Key == 'Right':
@@ -77,8 +77,32 @@ def kbevent(event):
     elif event.Key == 'Return' or event.Key == 'space':
         auto.models.train_models_user(s+" this","user_model.pkl")
         auto.models.save_models_user()
+        sock1.send_string(json.dumps("$hide"))
         s=""
+    elif event.Key == 'BackSpace':
+        s=s[:-1] 
+        
+        if len(s)<1:
+            sock1.send_string(json.dumps("$hide"))
+        
+        else:    
+            lis=[]
+
+            for i in auto.predict_currword_user(s):
+                lis.append(i[0])
+
+            temp=auto.predict_currword(s,25)
+            for j in temp:
+                if len(lis)>=10:
+                    break
+                if j[0] not in lis:
+                    lis.append(j[0])
+
+            sock1.send_string(json.dumps(lis))
+
+
     else :
+        sock1.send_string(json.dumps("$hide"))        
         s=""
 
     # safely exit 
@@ -103,7 +127,6 @@ def main():
 
     thread1 = mythread()
     thread1.start()
-
 
 if __name__ == '__main__':
     main()
