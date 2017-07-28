@@ -24,7 +24,7 @@ s=""
 
 context = zmq.Context()
 sock1 = context.socket(zmq.PAIR)
-sock1.bind("tcp://127.0.0.1:5683")
+sock1.bind("tcp://127.0.0.1:5684")
 
 class mythread(threading.Thread):
 

@@ -20,14 +20,14 @@ child.stderr.on('data', (data) => {
   console.log(`stderr: ${data}`);
 });
 
-let socket1 = socket.connect('tcp://127.0.0.1:5683');
+let socket1 = socket.connect('tcp://127.0.0.1:5684');
 // let socket2 = socket.connect('tcp://127.0.0.1:5682');
 
-let mainWindow
+let mainWindow;
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1000, height: 80, x:200, y:700 ,frame:true,
+  mainWindow = new BrowserWindow({width: 1000, height: 80, x:200, y:700 ,frame:false,
                    resizable:true ,alwaysOnTop:true })
 
   // and load the index.html of the app.
@@ -116,3 +116,4 @@ process.on('SIGINT', function() {
 });
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
