@@ -38,9 +38,10 @@ class mythread(threading.Thread):
             print("sock active")
             messg = sock1.recv()
             # pyautogui.typewrite(messg.decode("utf-8") )
-            for i in range(len(s)+1):
-                pyautogui.press('backspace')
-
+            messg = messg[len(s):]
+            # for i in range(len(s)+1):
+            #     pyautogui.press('backspace')
+            time.sleep(.2)
             s=""
             xerox.copy(messg.decode("utf-8"))
             pyautogui.hotkey('ctrl', 'v')
